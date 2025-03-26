@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Autofill Warning Demo</title>
+    <style>
+        body {
+            background-color: black;
+            color: #00ff00;
+            font-family: "Courier New", monospace;
+            text-align: center;
+            padding: 20px;
+        }
+        .hidden { display: none; }
+        form {
+            max-width: 500px;
+            margin: auto;
+            padding: 20px;
+            border: 2px solid #00ff00;
+            background-color: rgba(0, 0, 0, 0.8);
+            box-shadow: 0 0 10px #00ff00;
+        }
+        input {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            background: black;
+            border: 1px solid #00ff00;
+            color: #00ff00;
+        }
+        button {
+            padding: 10px 15px;
+            cursor: pointer;
+            background: black;
+            border: 2px solid #00ff00;
+            color: #00ff00;
+            font-size: 16px;
+        }
+        button:hover {
+            background: #00ff00;
+            color: black;
+        }
+        h2, h3 {
+            text-shadow: 0 0 5px #00ff00;
+        }
+        #autofillData {
+            margin-top: 20px;
+            padding: 10px;
+            border: 2px solid #00ff00;
+            background-color: rgba(0, 0, 0, 0.8);
+            box-shadow: 0 0 10px #00ff00;
+        }
+    </style>
+</head>
+<body>
+    <h2>⚠️ HACKING SIMULATION: Autofill Data Leak ⚠️</h2>
+    <p>Enter details below ( let autofill do it) and see what data could be leaked.</p>
+    
+    <form id="autofillForm">
+        <input type="text" name="name" placeholder="Full Name" autocomplete="name">
+        <input type="email" name="email" placeholder="Email" autocomplete="email">
+        <input type="tel" name="phone" placeholder="Phone Number" autocomplete="tel">
+        
+        <!-- Hidden Fields that Autofill Might Fill In -->
+        <input type="text" name="card" placeholder="Card Number" autocomplete="cc-number" class="hidden">
+        <input type="text" name="cvv" placeholder="CVV" autocomplete="cc-csc" class="hidden">
+        <input type="text" name="expiry" placeholder="Expiry Date" autocomplete="cc-exp" class="hidden">
+        <input type="text" name="billing-address" placeholder="Billing Address" autocomplete="billing street-address" class="hidden">
+        <input type="text" name="shipping-address" placeholder="Shipping Address" autocomplete="shipping street-address" class="hidden">
+        <input type="text" name="organization" placeholder="Company/Organization" autocomplete="organization" class="hidden">
+        <input type="text" name="username" placeholder="Username" autocomplete="username" class="hidden">
+        <input type="password" name="password" placeholder="Password" autocomplete="current-password" class="hidden">
+        <input type="text" name="dob" placeholder="Date of Birth" autocomplete="bday" class="hidden">
+        <input type="text" name="gender" placeholder="Gender" autocomplete="sex" class="hidden">
+        
+        <button type="button" onclick="showAutofillData()">Check Autofill Data</button>
+    </form>
+
+    <h3 class="hidden" id="warningMessage">⚠️ Your browser autofilled the following data:</h3>
+    <div id="autofillData"></div>
+    
+    <script>
+        function showAutofillData() {
+            const form = document.getElementById('autofillForm');
+            let message = "<ul>";
+            let filled = false;
+            
+            Array.from(form.elements).forEach(input => {
+                if (input.value.trim() !== "") {
+                    message += `<li><strong>${input.name}:</strong> ${input.value}</li>`;
+                    filled = true;
+                }
+            });
+            
+            message += "</ul>";
+            if (filled) {
+                document.getElementById('warningMessage').classList.remove('hidden');
+                document.getElementById('autofillData').innerHTML = message;
+            } else {
+                alert("No autofill data detected! Try using autofill on this form.");
+            }
+        }
+    </script>
+</body>
+</html>
