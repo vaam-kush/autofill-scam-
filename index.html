@@ -45,7 +45,7 @@
         h2, h3 {
             text-shadow: 0 0 5px #00ff00;
         }
-        #autofillData {
+        #autofillData, #ipInfo {
             margin-top: 20px;
             padding: 10px;
             border: 2px solid #00ff00;
@@ -56,10 +56,10 @@
 </head>
 <body>
     <h2>⚠️ HACKING SIMULATION: Autofill Data Leak ⚠️</h2>
-    <p>Enter details below ( let autofill do it) and see what data could be leaked.</p>
+    <p>Enter details below (or let autofill do it) and see what data could be leaked.</p>
     
     <form id="autofillForm">
-        <input type="text" name="name" placeholder="Full Name" autocomplete="name">
+        <input type="text" name="Name" placeholder="Full Name" autocomplete="Name">
         <input type="email" name="email" placeholder="Email" autocomplete="email">
         <input type="tel" name="phone" placeholder="Phone Number" autocomplete="tel">
         
@@ -80,6 +80,9 @@
 
     <h3 class="hidden" id="warningMessage">⚠️ Your browser autofilled the following data:</h3>
     <div id="autofillData"></div>
+    
+    <h3>🌍 Your IP & Location Info:</h3>
+    <div id="ipInfo">Fetching data...</div>
     
     <script>
         function showAutofillData() {
@@ -102,6 +105,25 @@
                 alert("No autofill data detected! Try using autofill on this form.");
             }
         }
+        
+        async function fetchIPInfo() {
+            try {
+                let response = await fetch('http://ip-api.com/json/');
+                let data = await response.json();
+                let ipInfo = `
+                    <p><strong>IP Address:</strong> ${data.query}</p>
+                    <p><strong>City:</strong> ${data.city}</p>
+                    <p><strong>Region:</strong> ${data.regionName}</p>
+                    <p><strong>Country:</strong> ${data.country}</p>
+                    <p><strong>ISP:</strong> ${data.isp}</p>
+                    <p><strong>VPN Status:</strong> ${data.proxy ? "Likely VPN" : "Not Detected"}</p>
+                `;
+                document.getElementById('ipInfo').innerHTML = ipInfo;
+            } catch (error) {
+                document.getElementById('ipInfo').innerHTML = "Error fetching IP details.";
+            }
+        }
+        fetchIPInfo();
     </script>
 </body>
 </html>
